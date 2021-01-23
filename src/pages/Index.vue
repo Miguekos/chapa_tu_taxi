@@ -1,6 +1,6 @@
 <template>
   <q-page>
-    <div class="row">
+    <div class="row q-pb-lg">
       <div class="col-md-3"></div>
       <div class="col-xs-12 col-md-6">
         <div class="text-center">
@@ -20,6 +20,7 @@
             <q-item class="text-center">
               <q-item-section>
                 <q-input
+                  autofocus
                   outlined
                   lazy-rules
                   :rules="[
@@ -111,18 +112,6 @@
                     </q-icon>
                   </template>
                 </q-input>
-                <!--                <q-input-->
-                <!--                  outlined-->
-                <!--                  lazy-rules-->
-                <!--                  :rules="[-->
-                <!--                    val => (val && val.length > 0) || 'Campo obligatorio'-->
-                <!--                  ]"-->
-                <!--                  stack-label-->
-                <!--                  dense-->
-                <!--                  v-model="fecha_nacimiento"-->
-                <!--                  ref="fecha_nacimiento"-->
-                <!--                  label="Fecha de nacimiento *"-->
-                <!--                ></q-input>-->
               </q-item-section>
               <q-item-section>
                 <q-input
@@ -141,28 +130,40 @@
                 ></q-input>
               </q-item-section>
             </q-item>
+            <q-separator spaced inset />
             <q-item class="text-center">
-              <q-item-section>
-                <q-input
-                  outlined
+              <q-item-section class="text-left q-pl-md">
+                ¿Cuánta experiencia tienes como mototaxista? *
+                <q-option-group
+                  dense
+                  size="xs"
+                  :options="optionsE"
+                  label="Notifications"
+                  type="radio"
+                  v-model="experiencia"
                   lazy-rules
                   :rules="[
                     val => (val && val.length > 0) || 'Campo obligatorio'
                   ]"
-                  stack-label
-                  dense
-                  v-model="brevete"
-                  ref="brevete"
-                  label="¿Qué tipo de brevete para moto tienes? *"
-                ></q-input>
+                />
               </q-item-section>
             </q-item>
-            <!-- <q-item class="text-center">
-                        <q-item-section>
-                            <q-input outlined  stack-label dense v-model="model" ref="model" label="Celular *"></q-input>
-                        </q-item-section>
-                    </q-item> -->
-            <!-- {{get_depart}} -->
+            <q-separator spaced inset />
+            <q-item class="text-center">
+              <q-item-section class="text-left q-pl-md">
+                ¿Qué tipo de brevete para moto tienes? *
+                <q-option-group
+                  dense
+                  size="xs"
+                  :options="optionsR"
+                  label="Notifications"
+                  type="radio"
+                  v-model="brevete"
+                />
+              </q-item-section>
+            </q-item>
+            <q-separator spaced inset />
+
             <q-item class="text-center">
               <q-item-section>
                 <q-select
@@ -229,44 +230,15 @@
               </q-item-section>
             </q-item>
             <q-item class="text-center">
-              <q-item-section>
-                <q-input
-                  outlined
-                  stack-label
-                  dense
-                  autogrow
-                  v-model="model"
-                  ref="model"
-                  label="¿Cuánta experiencia tienes como mototaxista? *"
-                  lazy-rules
-                  :rules="[
-                    val => (val && val.length > 0) || 'Campo obligatorio'
-                  ]"
-                ></q-input>
+              <q-item-section avatar>
+                <q-toggle style="align-self: center;" v-model="accept" />
+              </q-item-section>
+              <q-item-section class="cursor-pointer" @click="terminos">
+                Acepta usted la Política de Tratamiento de datos personales
+                https://bit.ly/2CvON7Q *
               </q-item-section>
             </q-item>
             <q-item class="text-center">
-              <q-item-section>
-                <!--                <q-input-->
-                <!--                  outlined-->
-                <!--                  stack-label-->
-                <!--                  dense-->
-                <!--                  v-model="model"-->
-                <!--                  ref="model"-->
-                <!--                  label="Acepta usted la Política de Tratamiento de datos personales establecida por Reinventing en el siguiente enlace: https://bit.ly/2CvON7Q *"-->
-                <!--                >-->
-                <!--                </q-input>-->
-                <q-toggle
-                  style="align-self: center;"
-                  v-model="accept"
-                  label="Acepta usted la Política de Tratamiento de datos personales https://bit.ly/2CvON7Q *"
-                />
-              </q-item-section>
-            </q-item>
-            <q-item class="text-center">
-              <!--              <q-item-section>-->
-              <!--                <q-btn outline color="red" label="Cancelar"></q-btn>-->
-              <!--              </q-item-section>-->
               <q-item-section>
                 <q-btn
                   outline
@@ -290,6 +262,30 @@ export default {
   name: "PageIndex",
   data() {
     return {
+      group: null,
+      optionsE: [
+        { label: "Menos de 1 año", value: "menos_1" },
+        { label: "1 año", value: "1", color: "green" },
+        {
+          label: "Mas de 1 año",
+          value: "mas_1",
+          color: "red"
+        },
+        {
+          label: "No tengo experiencia",
+          value: "no",
+          color: "orange"
+        }
+      ],
+      optionsR: [
+        { label: "B2C", value: "b2c" },
+        { label: "Otro", value: "otro", color: "green" },
+        {
+          label: "Brevete venezolano",
+          value: "venezolano",
+          color: "red"
+        }
+      ],
       loadboton: false,
       accept: false,
       submitResult: [],
@@ -297,6 +293,7 @@ export default {
       get_provin: "",
       get_distridistri: "",
       region: "",
+      experiencia: "",
       ciudad: "",
       distrito: "",
       model: "",
@@ -310,6 +307,9 @@ export default {
     };
   },
   methods: {
+    terminos() {
+      window.open("https://bit.ly/2CvON7Q");
+    },
     async getProv() {
       const respon = await this.$axios.get(
         `https://api.apps.com.pe/sgsform/provin/${this.region}`
@@ -343,7 +343,8 @@ export default {
             numero_dni: this.numero_dni,
             fecha_nacimiento: this.fecha_nacimiento,
             celular: this.celular,
-            brevete: this.brevete
+            brevete: this.brevete,
+            experiencia: this.experiencia
           };
           console.log(JsonEnviar);
           this.$q.notify({
@@ -351,7 +352,10 @@ export default {
             message: "Registro Correcto",
             color: "green"
           });
-          this.loadboton = false;
+          // this.loadboton = false;
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
         } else {
           this.$q.notify({
             position: "top-right",
@@ -359,7 +363,6 @@ export default {
             color: "red"
           });
           this.loadboton = false;
-          this.$router.push("/");
         }
       } catch (e) {
         console.log(e);
