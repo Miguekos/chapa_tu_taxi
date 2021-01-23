@@ -2,7 +2,7 @@
   "name": "chapa_tu_taxi",
   "version": "0.0.1",
   "description": "A Quasar Framework app",
-  "productName": "Quasar App",
+  "productName": "Chapa tu mototaxi",
   "author": "Miguel Rodriguez <miguekos1233@gmail.com>",
   "private": true,
   "scripts": {
