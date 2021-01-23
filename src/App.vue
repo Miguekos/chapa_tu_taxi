@@ -5,6 +5,9 @@
 </template>
 <script>
 export default {
-  name: 'App'
-}
+  name: "App",
+  created() {
+    this.$q.addressbarColor.set("#1e9f53");
+  }
+};
 </script>
