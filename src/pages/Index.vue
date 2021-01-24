@@ -439,10 +439,4 @@ export default {
 };
 </script>
 <style>
-.q-item {
-  min-height: 48px;
-  padding: 2px 16px !important;
-  color: inherit;
-  transition: color 0.3s, background-color 0.3s;
-}
 </style>
