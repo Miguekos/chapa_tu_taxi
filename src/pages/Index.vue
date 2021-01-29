@@ -66,6 +66,37 @@
             </q-item>
             <q-item class="text-center">
               <q-item-section>
+                <q-select
+                  outlined
+                  dense
+                  clearable
+                  v-model="tipo_documento"
+                  :options="options_tipo_documento"
+                  option-label="name"
+                  option-value="value"
+                  emit-value
+                  stack-label
+                  map-options
+                  label="Tipo de documento"
+                  lazy-rules
+                  :rules="[val => (val && val > 0) || 'Campo obligatorio']"
+                />
+                <!-- <q-input
+                  outlined
+                  lazy-rules
+                  :rules="[
+                    val => (val && val.length === 8) || 'Campo obligatorio'
+                  ]"
+                  stack-label
+                  dense
+                  counter
+                  maxlength="8"
+                  v-model="numero_dni"
+                  ref="tipo_documento"
+                  label="Número de DNI *"
+                ></q-input> -->
+              </q-item-section>
+              <q-item-section>
                 <q-input
                   outlined
                   lazy-rules
@@ -78,9 +109,11 @@
                   maxlength="8"
                   v-model="numero_dni"
                   ref="numero_dni"
-                  label="Número de DNI *"
+                  label="Número de documento *"
                 ></q-input>
               </q-item-section>
+            </q-item>
+            <q-item class="text-center">
               <q-item-section>
                 <q-input
                   stack-label
@@ -208,6 +241,8 @@
                   ]"
                 />
               </q-item-section>
+            </q-item>
+            <q-item class="text-center">
               <q-item-section>
                 <q-select
                   ref="distrito"
@@ -262,6 +297,21 @@ export default {
   name: "PageIndex",
   data() {
     return {
+      tipo_documento: null,
+      options_tipo_documento: [
+        {
+          name: "DNI",
+          value: 1
+        },
+        {
+          name: "C.E",
+          value: 2
+        },
+        {
+          name: "PTP",
+          value: 3
+        }
+      ],
       group: null,
       optionsE: [
         { label: "Menos de 1 año", value: "menos_1" },
@@ -284,6 +334,11 @@ export default {
           label: "Brevete venezolano",
           value: "venezolano",
           color: "red"
+        },
+        {
+          label: "No tengo Bravete",
+          value: "no tengo",
+          color: "orange"
         }
       ],
       loadboton: false,
@@ -330,9 +385,10 @@ export default {
         this.loadboton = true;
         if (this.accept) {
           const JsonEnviar = {
-            get_depart: this.get_depart,
-            get_provin: this.get_provin,
-            get_distridistri: this.get_distridistri,
+            tipo_documento: this.tipo_documento,
+            // get_depart: this.get_depart,
+            // get_provin: this.get_provin,
+            // get_distridistri: this.get_distridistri,
             region: this.region,
             ciudad: this.ciudad,
             distrito: this.distrito,
@@ -353,9 +409,9 @@ export default {
             color: "green"
           });
           // this.loadboton = false;
-          setTimeout(() => {
-            window.location.reload();
-          }, 2000);
+          // setTimeout(() => {
+          //   window.location.reload();
+          // }, 2000);
         } else {
           this.$q.notify({
             position: "top-right",
@@ -438,5 +494,4 @@ export default {
   }
 };
 </script>
-<style>
-</style>
+<style></style>
