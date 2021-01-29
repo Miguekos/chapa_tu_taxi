@@ -91,7 +91,7 @@
                   dense
                   counter
                   maxlength="8"
-                  v-model="numero_dni"
+                  v-model="numero_documento"
                   ref="tipo_documento"
                   label="Número de DNI *"
                 ></q-input> -->
@@ -107,8 +107,8 @@
                   dense
                   counter
                   maxlength="8"
-                  v-model="numero_dni"
-                  ref="numero_dni"
+                  v-model="numero_documento"
+                  ref="numero_documento"
                   label="Número de documento *"
                 ></q-input>
               </q-item-section>
@@ -121,8 +121,10 @@
                   label="Fecha de Nacimiento"
                   dense
                   v-model="fecha_nacimiento"
-                  mask="date"
-                  :rules="['date']"
+                  lazy-rules
+                  :rules="[
+                    val => (val && val.length > 0) || 'Campo obligatorio'
+                  ]"
                 >
                   <template v-slot:append>
                     <q-icon name="event" class="cursor-pointer">
@@ -131,7 +133,7 @@
                         transition-show="scale"
                         transition-hide="scale"
                       >
-                        <q-date default-view="Years" v-model="fecha_nacimiento">
+                        <q-date mask="YYYY-MM-DD" default-view="Years" v-model="fecha_nacimiento">
                           <div class="row items-center justify-end">
                             <q-btn
                               v-close-popup
@@ -165,6 +167,24 @@
             </q-item>
             <q-separator spaced inset />
             <q-item class="text-center">
+              <q-item-section class="text-left q-pl-md">
+                ¿Estado Civil? *
+                <q-option-group
+                  dense
+                  size="xs"
+                  :options="optionsC"
+                  label="Notifications"
+                  type="radio"
+                  v-model="estado_civil"
+                  lazy-rules
+                  :rules="[
+                    val => (val && val.length > 0) || 'Campo obligatorio'
+                  ]"
+                />
+              </q-item-section>
+            </q-item>
+            <q-separator spaced inset />
+                        <q-item class="text-center">
               <q-item-section class="text-left q-pl-md">
                 ¿Cuánta experiencia tienes como mototaxista? *
                 <q-option-group
@@ -297,6 +317,7 @@ export default {
   name: "PageIndex",
   data() {
     return {
+      estado_civil : "",
       tipo_documento: null,
       options_tipo_documento: [
         {
@@ -313,31 +334,50 @@ export default {
         }
       ],
       group: null,
+      optionsC: [
+        { label: "Soltero", value: "S" },
+        { label: "Casado", value: "C", color: "green" },
+        {
+          label: "Viudo",
+          value: "V",
+          color: "red"
+        },
+        {
+          label: "Divorsiado",
+          value: "D",
+          color: "orange"
+        },
+        {
+          label: "Conviviente",
+          value: "O",
+          color: "teal"
+        }
+      ],
       optionsE: [
-        { label: "Menos de 1 año", value: "menos_1" },
-        { label: "1 año", value: "1", color: "green" },
+        { label: "Menos de 1 año", value: "1" },
+        { label: "1 año", value: "2", color: "green" },
         {
           label: "Mas de 1 año",
-          value: "mas_1",
+          value: "3",
           color: "red"
         },
         {
           label: "No tengo experiencia",
-          value: "no",
+          value: "4",
           color: "orange"
         }
       ],
       optionsR: [
-        { label: "B2C", value: "b2c" },
-        { label: "Otro", value: "otro", color: "green" },
+        { label: "B2C", value: "9" },
+        { label: "Otro", value: "10", color: "green" },
         {
           label: "Brevete venezolano",
-          value: "venezolano",
+          value: "12",
           color: "red"
         },
         {
           label: "No tengo Bravete",
-          value: "no tengo",
+          value: "11",
           color: "orange"
         }
       ],
@@ -355,7 +395,7 @@ export default {
       apellido_paterno: "",
       apellido_materno: "",
       nombres: "",
-      numero_dni: "",
+      numero_documento: "",
       fecha_nacimiento: "",
       celular: "",
       brevete: ""
@@ -385,33 +425,44 @@ export default {
         this.loadboton = true;
         if (this.accept) {
           const JsonEnviar = {
-            tipo_documento: this.tipo_documento,
-            // get_depart: this.get_depart,
-            // get_provin: this.get_provin,
-            // get_distridistri: this.get_distridistri,
-            region: this.region,
-            ciudad: this.ciudad,
-            distrito: this.distrito,
-            model: this.model,
-            apellido_paterno: this.apellido_paterno,
-            apellido_materno: this.apellido_materno,
-            nombres: this.nombres,
-            numero_dni: this.numero_dni,
-            fecha_nacimiento: this.fecha_nacimiento,
-            celular: this.celular,
-            brevete: this.brevete,
-            experiencia: this.experiencia
+            // region: this.region,
+            // ciudad: this.ciudad,
+            // brevete: this.brevete,
+            // lo que recibe el webservice
+            ti_landin: 1,
+            no_apepat: this.apellido_paterno,
+            no_apemat: this.apellido_materno,
+            no_nombre: this.nombres,
+            co_docide: this.numero_documento,
+            ti_docide: this.tipo_documento,
+            ti_nacion: "",
+            fe_nacimi: this.fecha_nacimiento,
+            no_correo: "",
+            nu_telefo: this.celular,
+            va_experi: this.experiencia,
+            ti_liccon: this.brevete,
+            co_ubigeo: this.distrito,
+            co_plaveh: "",
+            co_modveh: "",
+            ti_vehper: "",
+            ti_combus: "",
+            co_estciv: this.estado_civil
           };
           console.log(JsonEnviar);
+          const respon = await this.$axios.post(
+            `https://api.reinventing.com.pe/v2.0/comerc/insert_landin`,
+            JsonEnviar
+          );
+          console.log("respon.data", respon.data);
           this.$q.notify({
             position: "top-right",
             message: "Registro Correcto",
             color: "green"
           });
           // this.loadboton = false;
-          // setTimeout(() => {
-          //   window.location.reload();
-          // }, 2000);
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
         } else {
           this.$q.notify({
             position: "top-right",
