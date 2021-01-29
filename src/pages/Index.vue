@@ -231,7 +231,7 @@
                   option-value="id"
                   emit-value
                   map-options
-                  label="Región:"
+                  label="Departamento:"
                   clearable
                   lazy-rules
                   :rules="[
@@ -253,7 +253,7 @@
                   option-label="name"
                   emit-value
                   map-options
-                  label="Ciudad:"
+                  label="Provincia:"
                   clearable
                   lazy-rules
                   :rules="[
@@ -343,7 +343,7 @@ export default {
           color: "red"
         },
         {
-          label: "Divorsiado",
+          label: "Divorciado",
           value: "D",
           color: "orange"
         },
@@ -357,7 +357,7 @@ export default {
         { label: "Menos de 1 año", value: "1" },
         { label: "1 año", value: "2", color: "green" },
         {
-          label: "Mas de 1 año",
+          label: "Más de 1 año",
           value: "3",
           color: "red"
         },
@@ -376,7 +376,7 @@ export default {
           color: "red"
         },
         {
-          label: "No tengo Bravete",
+          label: "No tengo Brevete",
           value: "11",
           color: "orange"
         }
