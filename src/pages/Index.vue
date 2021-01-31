@@ -101,12 +101,12 @@
                   outlined
                   lazy-rules
                   :rules="[
-                    val => (val && val.length === 8) || 'Campo obligatorio'
+                    val => (val && val.length >= conteo ) || 'Campo obligatorio'
                   ]"
                   stack-label
                   dense
                   counter
-                  maxlength="8"
+                  :maxlength=conteo
                   v-model="numero_documento"
                   ref="numero_documento"
                   label="Número de documento *"
@@ -400,6 +400,16 @@ export default {
       celular: "",
       brevete: ""
     };
+  },
+  computed: {
+    conteo(){
+      if (this.tipo_documento == 1) {
+        return 8
+      } else {
+        return 9
+      }
+      
+    }
   },
   methods: {
     terminos() {
